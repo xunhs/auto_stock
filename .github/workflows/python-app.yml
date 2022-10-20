@@ -28,15 +28,18 @@ jobs:
         pip install pandas numpy pyecharts akshare
     - name: Run main.py
       run: |
-        python main_test.py
+        mkdir public
+        python main.py
         
     - name: Commit & Push
       run: |
+        cd public
+        git init
         msg='来自github action的自动部署'
         githubUrl=https://xunhs:${GITHUB_TOKEN}@github.com/xunhs/auto_stock.git
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add .
+        git add -A
         git commit -m "${msg}"
         git push -f $githubUrl main:public
         
