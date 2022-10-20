@@ -29,19 +29,24 @@ jobs:
     - name: Run main.py
       run: |
         mkdir public
-        mkdir data
+        mkdir public/html
+        mkdir public/data
         python main_test.py
         
     - name: Commit & Push
       run: |
-        msg='来自github action的自动部署'
-        githubUrl=https://xunhs:${GITHUB_TOKEN}@github.com/xunhs/auto_stock.git
+        remote_addr=`git remote get-url --push origin`
+        echo "remote addr: ${remote_addr}"
+        cd public
+        git init
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add ./public 
-        git add ./data
+        git add -A
+        msg='来自github action的自动部署'
         git commit -m "${msg}"
-        git push -f $githubUrl main:public
+        githubUrl=https://xunhs:${GITHUB_TOKEN}@github.com/xunhs/auto_stock.git
+        git remote add origin $githubUrl
+        git push origin master:public --force
         
 
         
