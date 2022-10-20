@@ -114,6 +114,7 @@ for _indicator in ['市盈率', '市净率', '股息率']:
 
 
 title_str = f'{stock_name}-{stock_code}'
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
 line.render(f'./public/html/{title_str}.html')
