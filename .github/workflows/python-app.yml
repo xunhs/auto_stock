@@ -35,18 +35,26 @@ jobs:
         
     - name: Commit & Push
       run: |
+
         remote_addr=`git remote get-url --push origin`
         echo "remote addr: ${remote_addr}"
         cd public
+        user_name=`git log -1 --pretty=format:'%an'`
+        user_email=`git log -1 --pretty=format:'%ae'`
+        git config --global init.defaultBranch master
         git init
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
+        git config user.name ${user_name}
+        git config user.email ${user_email}
         git add -A
         msg='来自github action的自动部署'
         git commit -m "${msg}"
-        githubUrl=https://xunhs:${GITHUB_TOKEN}@github.com/xunhs/auto_stock.git
-        git remote add origin $githubUrl
-        git push origin master:public --force
-        
+        remote_addr=`echo $remote_addr|  awk -F'://' '{print $2}'`
+        remote_addr=https://${user_name}:${{ secrets.GITHUB_TOKEN }}@${remote_addr}
+        git remote add origin ${remote_addr}
+        git push origin HEAD:public --force
+
+
+
+
 
         
