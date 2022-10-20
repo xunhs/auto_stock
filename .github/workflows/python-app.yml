@@ -31,7 +31,7 @@ jobs:
         mkdir public
         mkdir public/html
         mkdir public/data
-        python main_test.py
+        python main.py
         
     - name: Commit & Push
       run: |
