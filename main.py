@@ -116,7 +116,7 @@ for _indicator in ['市盈率', '市净率', '股息率']:
 title_str = f'{stock_name}-{stock_code}'
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -146,7 +146,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -177,7 +177,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -207,7 +207,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -236,7 +236,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -264,7 +264,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -293,7 +293,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -320,7 +320,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -349,7 +349,7 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(title_str + '.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -379,7 +379,7 @@ merge_df.to_csv(title_str + '.csv', header=True, index=False)
 title_str = f'{stock_name}-{stock_code}'
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
+line.render(f'./public/{title_str}.html')
 
 
 
@@ -408,7 +408,5 @@ merge_df.to_csv(title_str + '.csv', header=True, index=False)
 title_str = f'{stock_name}-{stock_code}'
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'{title_str}.html')
-
-
+line.render(f'./public/{title_str}.html')
 
