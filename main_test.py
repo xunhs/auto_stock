@@ -117,4 +117,4 @@ title_str = f'{stock_name}-{stock_code}'
 merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/{title_str}.html')
+line.render(f'./html/{title_str}.html')
