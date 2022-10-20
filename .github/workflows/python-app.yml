@@ -29,7 +29,7 @@ jobs:
     - name: Run main.py
       run: |
         mkdir public
-        python main.py
+        python main_test.py
         
     - name: Commit & Push
       run: |
@@ -37,7 +37,8 @@ jobs:
         githubUrl=https://xunhs:${GITHUB_TOKEN}@github.com/xunhs/auto_stock.git
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add -A
+        git add ./public 
+        git add ./data
         git commit -m "${msg}"
         git push -f $githubUrl main:public
         
