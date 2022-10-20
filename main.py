@@ -116,7 +116,7 @@ for _indicator in ['市盈率', '市净率', '股息率']:
 title_str = f'{stock_name}-{stock_code}'
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -143,10 +143,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -174,10 +174,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -204,10 +204,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -233,10 +233,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -261,10 +261,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -290,10 +290,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -317,10 +317,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -346,10 +346,10 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
 title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -374,12 +374,12 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 
 title_str = f'{stock_name}-{stock_code}'
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
@@ -403,12 +403,12 @@ for _indicator in ['市盈率', '市净率', '股息率']:
     index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
     merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
                         left_on='date', right_on='日期', how='left')
-merge_df.to_csv(f'./data/{title_str}.csv', header=True, index=False)
+merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
 
 title_str = f'{stock_name}-{stock_code}'
 print(title_str)
 line = get_line(title_str, merge_df, support_line)
-line.render(f'./html/{title_str}.html')
+line.render(f'./public/html/{title_str}.html')
 
 
 
