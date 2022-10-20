@@ -27,7 +27,7 @@ jobs:
         pip install pandas numpy pyecharts akshare
     - name: Run main.py
       run: |
-        python main.py
+        python main_test.py
         
     - name: Commit
       run: |
