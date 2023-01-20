@@ -486,6 +486,7 @@ selected_df.index = selected_df['指数名称']
 # 按照列表顺序排序
 selected_df = selected_df.loc[symbols]
 
+_count = 0
 for idx in selected_df.index:
     PE_pc = selected_df.loc[idx, 'PE分位']
     PB_pc = selected_df.loc[idx, 'PB分位']
@@ -494,5 +495,11 @@ for idx in selected_df.index:
         symbol_code = selected_df.loc[idx, '指数代码']
         update_time = selected_df.loc[idx, '更新时间']
         info = f'从近10年来看，{symbol}({symbol_code}):市盈率PE分位处于{PE_pc}%，市净率PB分位处于{PB_pc}%，均处于15%分位以下！更新时间:{update_time}'
+        _count += 1
         print(info)
         push_report(info)
+if _count == 0:
+    info = '本周观测ETF均处于15%分位以上，切勿操作！'
+    push_report(info)
+        
+        
