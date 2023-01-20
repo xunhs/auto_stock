@@ -413,3 +413,86 @@ line.render(f'./public/html/{title_str}.html')
 
 
 
+
+###################
+
+import akshare as ak
+from datetime import datetime, timedelta
+import numpy as np
+import datetime
+import pandas as pd
+import requests
+import json
+
+import time
+import hmac
+import hashlib
+import base64
+import urllib.parse
+
+
+today = datetime.date.today()
+symbols = ['上证50', '沪深300', '中证500', '中证1000', '创业板50', 
+           '标普500', '纳斯达克100', '恒生指数', '道琼斯工业指数', '英国富时100',
+           '全指医药', '全指信息', '全指消费', '中国互联网50', '中证新能源']
+
+K = 15.0
+
+def push_report(msg):
+    # 定时任务触发钉钉报告推送
+
+    
+    timestamp = str(round(time.time() * 1000))
+    access_token = '551fed66b9a0e9ed66fb5e97817f2a4262f30e454926e3e398ecaeda6cce73c1'
+    secret = 'SECb8cd017582d26e13fc6fd1c97de505686f36fc16b22435945351275fdecc5f77'
+    secret_enc = secret.encode('utf-8')
+    string_to_sign = '{}\n{}'.format(timestamp, secret)
+    string_to_sign_enc = string_to_sign.encode('utf-8')
+    hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+    sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+    web_hook = f"https://oapi.dingtalk.com/robot/send?access_token={access_token}&timestamp={timestamp}&sign={sign}"
+    
+    
+    header = {
+        "Content-Type": "application/json;charset=UTF-8"
+    }
+    message_body = {
+        "msgtype": "markdown",
+        "markdown": {
+            "title": "ETF",
+            "text": msg
+        },
+        "at": {
+            "atMobiles": [],
+            "isAtAll": False
+        }
+    }
+    send_data = json.dumps(message_body)  # 将字典类型数据转化为json格式
+    ChatBot = requests.post(url=web_hook, data=send_data, headers=header)
+    opener = ChatBot.json()
+    if opener["errmsg"] == "ok":
+        print(u"%s 通知消息发送成功！" % opener)
+    else:
+        print(u"通知消息发送失败，原因：{}".format(opener))
+
+# msg = "消息推送展示项目：钉钉"
+# push_report(msg)
+
+today_eval_df = ak.index_value_name_funddb()
+# today_eval_df.head()
+
+selected_df = today_eval_df[today_eval_df['指数名称'].isin(symbols)]
+selected_df.index = selected_df['指数名称']
+# 按照列表顺序排序
+selected_df = selected_df.loc[symbols]
+
+for idx in selected_df.index:
+    PE_pc = selected_df.loc[idx, 'PE分位']
+    PB_pc = selected_df.loc[idx, 'PB分位']
+    if (PE_pc <= K) and (PB_pc <= K):
+        symbol = selected_df.loc[idx, '指数名称']
+        symbol_code = selected_df.loc[idx, '指数代码']
+        update_time = selected_df.loc[idx, '更新时间']
+        info = f'从近10年来看，{symbol}({symbol_code}):市盈率PE分位处于{PE_pc}%，市净率PB分位处于{PB_pc}%，均处于15%分位以下！更新时间:{update_time}'
+        print(info)
+        push_report(info)
