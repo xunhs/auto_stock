@@ -357,7 +357,7 @@ html_end_str = '''
 
 index_html_str = '\n'.join([index_html_str, html_end_str])
 
-with open('./public/idnex.html', 'w+') as fp:
+with open('./public/index.html', 'w+') as fp:
     fp.write(index_html_str)
 
 
