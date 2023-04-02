@@ -25,481 +25,428 @@ def get_yesterday(n=10):
     return yesterday
 
 
-
-def get_line(title_str, data_df, support_line):
+def get_stock_line(title_str, data_df, support_line):
+    
     one_day = get_yesterday(10)
     first = data_df.loc[0, 'date']
     if first < one_day:
         data_df = data_df[data_df['date'] >= one_day]
     
     date_list = data_df['date'].tolist()
-    line = Line(init_opts=opts.InitOpts(width="1500px",
-                                              height="600px",
-                                              theme=ThemeType.LIGHT
-                                              ))
+    line = Line(init_opts=opts.InitOpts(width="900px",
+                                        height="500px",
+                                        theme=ThemeType.LIGHT
+                                        ))
     line.add_xaxis(xaxis_data=date_list)
-    
-    
 
+    stock_values = data_df['close'].tolist()
     line.add_yaxis(
         series_name="收盘价",
-        y_axis=data_df['close'].tolist(),
-        markline_opts=opts.MarkLineOpts(data=[
-            opts.MarkLineItem(y=support_line, name="支撑位"),
-        ]),
+        y_axis=stock_values,
     )
 
-    _index = 0
-    _offset = 55
-    for idx, (fc, fn) in enumerate(zip(fund_code, fund_name)):
-        _index += 1
-        line.extend_axis(yaxis=opts.AxisOpts(type_="value", 
-                                             position="left",
-                                             offset= (idx + 1) * _offset,))
-        line.add_yaxis(
-            series_name=fn,
-            y_axis=data_df[fn].tolist(), 
-            yaxis_index=_index)
+    support_line_define = support_line
+    support_line_70 = max(stock_values) * 0.3
+    support_line_80 = max(stock_values) * 0.2
+    _max = np.max(stock_values)
+    _min = np.min(stock_values)
+    now = stock_values[-1]   
+    tag = ''
+    if now > support_line_define:
+        tag = '-'
+    subtitle_str = '目前点位{}，距离支撑位{}{}%'.format(now, tag, round((now-support_line_define)/now * 100,2))
+    if support_line_define == 0:
+        subtitle_str = '目前点位{}，距离70%分位{}{}%'.format(now, tag, round((now-support_line_70)/now * 100,2))
 
-    for idx, pe_column in enumerate(['市盈率', '市净率', '股息率']):
-        _index += 1
-        line.extend_axis(yaxis=opts.AxisOpts(type_="value", 
-                                             position="right",
-                                             offset=idx * _offset,))
-        if pe_column == '股息率':
-            _mlitem = opts.MarkLineItem(y=data_df[pe_column].quantile(0.75), name="Max+10%")
-        else:
-            _mlitem = opts.MarkLineItem(y=data_df[pe_column].quantile(0.25), name="Min+10%")
-        line.add_yaxis(
-            series_name=pe_column,
-            y_axis=data_df[pe_column].tolist(), 
-            markline_opts=opts.MarkLineOpts(data=[
-                _mlitem,
-                opts.MarkLineItem(type_="average", name="Average"),
-        ]),
-            yaxis_index=_index)
-    
     line.set_global_opts(
-        title_opts=opts.TitleOpts(subtitle=title_str),
-        # 十字准星指示器
+        title_opts=opts.TitleOpts(title=title_str, subtitle=subtitle_str),
+        # yaxis_opts=opts.AxisOpts(max_=_max, min_=_min),
         tooltip_opts = opts.TooltipOpts(is_show = True, trigger_on = "mousemove | click", axis_pointer_type='cross'),
-        # 放大缩小
         datazoom_opts=opts.DataZoomOpts(orient="horizontal", range_start=0,range_end=100), 
+    )
+
+    markline_data = [
+                opts.MarkLineItem(y=support_line_70, name="70线", linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(38, 70, 83)')),
+                opts.MarkLineItem(y=support_line_80, name="80线", linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(38, 70, 83)')),
+            ]
+    if support_line_define != 0:
+        _item = opts.MarkLineItem(y=support_line_define, name="支撑位", linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)'))
+        markline_data.append(_item)
+
+
+    line.set_series_opts(
+        yaxis_opts=opts.AxisOpts(max_='dataMax', min_='dataMin'),
+        markline_opts=opts.MarkLineOpts(
+            data= markline_data
+        ),
+    )
+    return line
+
+
+def get_pe_line(title_str, data_df):
+    one_day = get_yesterday(10)
+    first = data_df.loc[0, 'date']
+    if first < one_day:
+        data_df = data_df[data_df['date'] >= one_day]
+    
+    date_list = data_df['date'].tolist()
+    line = Line(init_opts=opts.InitOpts(width="900px",
+                                        height="500px",
+                                        theme=ThemeType.LIGHT
+                                        ))
+    line.add_xaxis(xaxis_data=date_list)
+
+
+    indicator = "市盈率"
+    pe_values = data_df[indicator].tolist()
+    line.add_yaxis(
+        series_name=indicator,
+        y_axis=pe_values,
+    )
+
+
+    _max = np.max(pe_values)
+    pe_80 = np.percentile(pe_values,80)
+    average = np.mean(pe_values)
+    pe_20 = np.percentile(pe_values,20)
+    pe_10 = np.percentile(pe_values,10)
+    _min = np.min(pe_values)
+    now = pe_values[-1]   
+    tag = ''
+    if now > pe_20:
+        tag = '-'
+    subtitle_str = '目前点位{}，距离20分位{}{}%'.format(now, tag, round((now-pe_20)/now * 100,2))
+
+    line.set_global_opts(
+        title_opts=opts.TitleOpts(title='{}-{}'.format(title_str, indicator), subtitle=subtitle_str),
+        yaxis_opts=opts.AxisOpts(max_=_max, min_=_min),
+        tooltip_opts = opts.TooltipOpts(is_show = True, trigger_on = "mousemove | click", axis_pointer_type='cross'),
+        datazoom_opts=opts.DataZoomOpts(orient="horizontal", range_start=0,range_end=100), 
+    )
+
+
+    line.set_series_opts(
+        
+        markline_opts=opts.MarkLineOpts(
+            data=[
+                opts.MarkLineItem(y=pe_80, name="pe_80",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)')),
+                opts.MarkLineItem(y=average, name="average",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(232, 197, 107)')),
+                opts.MarkLineItem(y=pe_20, name="pe_20",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(41, 157, 144)')),
+                opts.MarkLineItem(y=pe_10, name="pe_10",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(38, 70, 83)')),
+            ],
+        ),
     )
     return line
 
 
 
+'''
+获取指数：
+stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
+获取基金：
+fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
+'''
+
+
+def worker(stock_code, stock_name, support_line):
+    title_str = f'{stock_name}-{stock_code}'
+    print(title_str)
+    stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
+    symbol = stock_name
+    indicator = "市盈率"
+    hist_eval_pe_df = ak.index_value_hist_funddb(symbol=symbol, indicator=indicator)
+    quantile_series = pd.qcut(hist_eval_pe_df['市盈率'], q=[0, 0.2, 0.4, 0.6, 1], labels=['低估','正常','偏高','高估'])
+    hist_eval_pe_df['市盈率估值'] = quantile_series
+    hist_eval_pe_df = hist_eval_pe_df[['日期', '市盈率', '市盈率估值']]
+
+    indicator = "市净率"
+    hist_eval_pb_df = ak.index_value_hist_funddb(symbol=symbol, indicator=indicator)
+    quantile_series = pd.qcut(hist_eval_pb_df['市净率'], q=[0, 0.2, 0.4, 0.6, 1], labels=['低估','正常','偏高','高估'])
+    hist_eval_pb_df['市净率估值'] = quantile_series
+    hist_eval_pb_df = hist_eval_pb_df[['日期', '市净率', '市净率估值']]
+
+    merge_df = pd.merge(stock_zh_index_daily_df[['date', 'close']], hist_eval_pe_df, 
+            left_on='date', right_on='日期', how='inner')
+    merge_df = pd.merge(merge_df[['date', 'close', '市盈率', '市盈率估值']], hist_eval_pb_df, 
+            left_on='date', right_on='日期', how='inner')
+    merge_df = merge_df.drop(['日期'], axis=1)
+    merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
+    line = get_stock_line(title_str, merge_df, support_line)
+    line.render(f'./public/html/{title_str}.html')
+    pe_line = get_pe_line(title_str, merge_df)
+    pe_line.render(f'./public/html/{title_str}-pe.html')
+    item_html_str = f'''
+                <div class="col">
+                    <h1>{title_str}</h1>
+                    <iframe src="../public/{title_str}.html" height="500px" width="900px"></iframe>
+                    <iframe src="../public/{title_str}-pe.html" height="500px" width="900px"></iframe>
+                </div>
+    '''
+    return merge_df, line, item_html_str
+
+
+def worker_test(stock_code, stock_name, support_line):
+    title_str = f'{stock_name}-{stock_code}'
+    print(title_str)
+    # stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
+    # symbol = stock_name
+    # indicator = "市盈率"
+    # hist_eval_pe_df = ak.index_value_hist_funddb(symbol=symbol, indicator=indicator)
+    # quantile_series = pd.qcut(hist_eval_pe_df['市盈率'], q=[0, 0.2, 0.4, 0.6, 1], labels=['低估','正常','偏高','高估'])
+    # hist_eval_pe_df['市盈率估值'] = quantile_series
+    # hist_eval_pe_df = hist_eval_pe_df[['日期', '市盈率', '市盈率估值']]
+
+    # indicator = "市净率"
+    # hist_eval_pb_df = ak.index_value_hist_funddb(symbol=symbol, indicator=indicator)
+    # quantile_series = pd.qcut(hist_eval_pb_df['市净率'], q=[0, 0.2, 0.4, 0.6, 1], labels=['低估','正常','偏高','高估'])
+    # hist_eval_pb_df['市净率估值'] = quantile_series
+    # hist_eval_pb_df = hist_eval_pb_df[['日期', '市净率', '市净率估值']]
+
+    # merge_df = pd.merge(stock_zh_index_daily_df[['date', 'close']], hist_eval_pe_df, 
+    #         left_on='date', right_on='日期', how='inner')
+    # merge_df = pd.merge(merge_df[['date', 'close', '市盈率', '市盈率估值']], hist_eval_pb_df, 
+    #         left_on='date', right_on='日期', how='inner')
+    # merge_df = merge_df.drop(['日期'], axis=1)
+    # merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
+    merge_df = pd.read_csv(f'./public/data/{title_str}.csv', header=0)
+    merge_df['date'] = pd.to_datetime(merge_df['date']).dt.date
+    title_str = stock_code 
+
+    line = get_stock_line(title_str, merge_df, support_line)
+    line.render(f'./public/html/{title_str}.html')
+    item_html_str = f'''
+                <div class="col">
+                    <h1>{title_str}</h1>
+                    <iframe src="./{title_str}.html" height="500px" width="900px"></iframe>
+                    <iframe src="./{title_str}-pe.html" height="500px" width="900px"></iframe>
+                </div>
+    '''
+    pe_line = get_pe_line(title_str, merge_df)
+    pe_line.render(f'./public/html/{title_str}-pe.html')
+
+    return merge_df, line, item_html_str
+
+
+index_html_str = '''
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <title>Auto Stock</title>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="row align-items-start">
+
+
+'''
+
+
+
+
+stock_code = 'sh000001'
+stock_name = '上证指数'
+support_line = 2800
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000300'
 stock_name = '沪深300'
 support_line = 3500
-
-fund_code = ['050002']
-fund_name = ['博时沪深300指数']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-
-
-
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000905'
 stock_name = '中证500'
 support_line = 4800
-
-fund_code = ['161017', '160119']
-fund_name = ['富国中证500指数增强(LOF)', '南方中证500ETF联接']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-
-
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
-
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000852'
 stock_name = '中证1000'
-support_line = 5800
-
-fund_code = ['005313', '006486']
-fund_name = ['万家中证1000指数增强', '广发中证1000指数A']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-
-
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
+support_line = 5880
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'hkHSI'
 stock_name = '恒生指数'
-fund_code = '000071'
-fund_name = '华夏恒生ETF联接'
-support_line = 18000
+support_line = 18800
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
-fund_code = ['000071', '164705']
-fund_name = ['华夏恒生ETF联接', '汇添富恒生指数A']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
-
+stock_code = 'sz399006'
+stock_name = '创业板指'
+support_line = 18800
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000922'
 stock_name = '中证红利'
 support_line = 0
-
-fund_code = ['100032', ]
-fund_name = ['富国中证红利指数增强', ]
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000991'
 stock_name = '全指医药'
 support_line = 9700
-
-fund_code = ['001180', '501009']
-fund_name = ['广发医药卫生联接', '汇添富中证生物科技指数A']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
-
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399989'
 stock_name = '中证医疗'
 support_line = 7900
-
-fund_code = ['002708', '502056',]
-fund_name = ['大摩健康产业混合', '广发中证医疗指数(LOF)A',]
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol='医疗器械', indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000990'
 stock_name = '全指消费'
 support_line = 11700
-
-fund_code = ['110022', '004424']
-fund_name = ['易方达消费行业股票', '汇添富文体娱乐混合A']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
-
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399967'
 stock_name = '中证军工'
-support_line = 5800
-
-fund_code = ['163115', '161024']
-fund_name = ['申万菱信中证军工指数A', '富国中证军工指数(LOF)A']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol='国防军工(申万)', indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-title_str = f'{stock_name}-{stock_code}'
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
-
+support_line = 8300
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'hkHSTECH'
 stock_name = '恒生科技指数'
 support_line = 0
-
-fund_code = ['012348']
-fund_name = ['天弘恒生科技指数']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-
-title_str = f'{stock_name}-{stock_code}'
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
-
-
-
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000993'
 stock_name = '全指信息'
-support_line = 4500
+support_line = 4600
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
-fund_code = ['000942', '001513']
-fund_name = ['广发信息技术联接A', '易方达信息产业混合']
-
-stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
-merge_df = stock_zh_index_daily_df
-for fc, fn in zip(fund_code, fund_name):
-    fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
-    merge_df = pd.merge(merge_df, fund_open_fund_info_em_df,
-                        left_on='date', right_on='净值日期', how='left')
-    merge_df.rename(columns={'单位净值': fn}, inplace=True,)
-
-for _indicator in ['市盈率', '市净率', '股息率']:
-    index_value_hist_funddb_df = ak.index_value_hist_funddb(symbol=stock_name, indicator=_indicator)
-    merge_df = pd.merge(merge_df, index_value_hist_funddb_df,
-                        left_on='date', right_on='日期', how='left')
-merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-
-title_str = f'{stock_name}-{stock_code}'
-print(title_str)
-line = get_line(title_str, merge_df, support_line)
-line.render(f'./public/html/{title_str}.html')
+stock_code = 'sz399971'
+stock_name = '中证传媒'
+support_line = 931
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
+
+html_end_str = '''
+
+
+
+            </div>
+          </div>
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+</body>
+</html>
+
+
+'''
+
+index_html_str = '\n'.join([index_html_str, html_end_str])
+
+with open('./public/html/idnex.html', 'w+') as fp:
+    fp.write(index_html_str)
 
 
 ###################
 
-import akshare as ak
-from datetime import datetime, timedelta
-import numpy as np
-import datetime
-import pandas as pd
-import requests
-import json
+# import akshare as ak
+# from datetime import datetime, timedelta
+# import numpy as np
+# import datetime
+# import pandas as pd
+# import requests
+# import json
 
-import time
-import hmac
-import hashlib
-import base64
-import urllib.parse
+# import time
+# import hmac
+# import hashlib
+# import base64
+# import urllib.parse
 
 
-today = datetime.date.today()
-symbols = ['上证50', '沪深300', '中证500', '中证1000', '创业板50', 
-           '标普500', '纳斯达克100', '恒生指数', '道琼斯工业指数', '英国富时100',
-           '全指医药', '全指信息', '全指消费', '中国互联网50', '中证新能源']
+# today = datetime.date.today()
+# symbols = ['上证50', '沪深300', '中证500', '中证1000', '创业板50', 
+#            '标普500', '纳斯达克100', '恒生指数', '道琼斯工业指数', '英国富时100',
+#            '全指医药', '全指信息', '全指消费', '中国互联网50', '中证新能源']
 
-K = 15.0
+# K = 15.0
 
-def push_report(msg):
-    # 定时任务触发钉钉报告推送
+# def push_report(msg):
+#     # 定时任务触发钉钉报告推送
 
     
-    timestamp = str(round(time.time() * 1000))
-    access_token = '551fed66b9a0e9ed66fb5e97817f2a4262f30e454926e3e398ecaeda6cce73c1'
-    secret = 'SECb8cd017582d26e13fc6fd1c97de505686f36fc16b22435945351275fdecc5f77'
-    secret_enc = secret.encode('utf-8')
-    string_to_sign = '{}\n{}'.format(timestamp, secret)
-    string_to_sign_enc = string_to_sign.encode('utf-8')
-    hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-    sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
-    web_hook = f"https://oapi.dingtalk.com/robot/send?access_token={access_token}&timestamp={timestamp}&sign={sign}"
+#     timestamp = str(round(time.time() * 1000))
+#     access_token = '551fed66b9a0e9ed66fb5e97817f2a4262f30e454926e3e398ecaeda6cce73c1'
+#     secret = 'SECb8cd017582d26e13fc6fd1c97de505686f36fc16b22435945351275fdecc5f77'
+#     secret_enc = secret.encode('utf-8')
+#     string_to_sign = '{}\n{}'.format(timestamp, secret)
+#     string_to_sign_enc = string_to_sign.encode('utf-8')
+#     hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+#     sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+#     web_hook = f"https://oapi.dingtalk.com/robot/send?access_token={access_token}&timestamp={timestamp}&sign={sign}"
     
     
-    header = {
-        "Content-Type": "application/json;charset=UTF-8"
-    }
-    message_body = {
-        "msgtype": "markdown",
-        "markdown": {
-            "title": "ETF",
-            "text": msg
-        },
-        "at": {
-            "atMobiles": [],
-            "isAtAll": False
-        }
-    }
-    send_data = json.dumps(message_body)  # 将字典类型数据转化为json格式
-    ChatBot = requests.post(url=web_hook, data=send_data, headers=header)
-    opener = ChatBot.json()
-    if opener["errmsg"] == "ok":
-        print(u"%s 通知消息发送成功！" % opener)
-    else:
-        print(u"通知消息发送失败，原因：{}".format(opener))
+#     header = {
+#         "Content-Type": "application/json;charset=UTF-8"
+#     }
+#     message_body = {
+#         "msgtype": "markdown",
+#         "markdown": {
+#             "title": "ETF",
+#             "text": msg
+#         },
+#         "at": {
+#             "atMobiles": [],
+#             "isAtAll": False
+#         }
+#     }
+#     send_data = json.dumps(message_body)  # 将字典类型数据转化为json格式
+#     ChatBot = requests.post(url=web_hook, data=send_data, headers=header)
+#     opener = ChatBot.json()
+#     if opener["errmsg"] == "ok":
+#         print(u"%s 通知消息发送成功！" % opener)
+#     else:
+#         print(u"通知消息发送失败，原因：{}".format(opener))
 
-# msg = "消息推送展示项目：钉钉"
-# push_report(msg)
+# # msg = "消息推送展示项目：钉钉"
+# # push_report(msg)
 
-today_eval_df = ak.index_value_name_funddb()
-# today_eval_df.head()
+# today_eval_df = ak.index_value_name_funddb()
+# # today_eval_df.head()
 
-selected_df = today_eval_df[today_eval_df['指数名称'].isin(symbols)]
-selected_df.index = selected_df['指数名称']
-# 按照列表顺序排序
-selected_df = selected_df.loc[symbols]
+# selected_df = today_eval_df[today_eval_df['指数名称'].isin(symbols)]
+# selected_df.index = selected_df['指数名称']
+# # 按照列表顺序排序
+# selected_df = selected_df.loc[symbols]
 
-_count = 0
-for idx in selected_df.index:
-    PE_pc = selected_df.loc[idx, 'PE分位']
-    PB_pc = selected_df.loc[idx, 'PB分位']
-    if (PE_pc <= K) and (PB_pc <= K):
-        symbol = selected_df.loc[idx, '指数名称']
-        symbol_code = selected_df.loc[idx, '指数代码']
-        update_time = selected_df.loc[idx, '更新时间']
-        info = f'从近10年来看，{symbol}({symbol_code}):市盈率PE分位处于{PE_pc}%，市净率PB分位处于{PB_pc}%，均处于15%分位以下！更新时间:{update_time}'
-        _count += 1
-        print(info)
-        push_report(info)
-if _count == 0:
-    info = '本周观测ETF均处于15%分位以上，切勿操作！'
-    push_report(info)
+# _count = 0
+# for idx in selected_df.index:
+#     PE_pc = selected_df.loc[idx, 'PE分位']
+#     PB_pc = selected_df.loc[idx, 'PB分位']
+#     if (PE_pc <= K) and (PB_pc <= K):
+#         symbol = selected_df.loc[idx, '指数名称']
+#         symbol_code = selected_df.loc[idx, '指数代码']
+#         update_time = selected_df.loc[idx, '更新时间']
+#         info = f'从近10年来看，{symbol}({symbol_code}):市盈率PE分位处于{PE_pc}%，市净率PB分位处于{PB_pc}%，均处于15%分位以下！更新时间:{update_time}'
+#         _count += 1
+#         print(info)
+#         push_report(info)
+# if _count == 0:
+#     info = '本周观测ETF均处于15%分位以上，切勿操作！'
+#     push_report(info)
         
         
