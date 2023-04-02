@@ -178,8 +178,8 @@ def worker(stock_code, stock_name, support_line):
     item_html_str = f'''
                 <div class="col">
                     <h1>{title_str}</h1>
-                    <iframe src="./html/{title_str}.html" height="500px" width="900px"></iframe>
-                    <iframe src="./html/{title_str}-pe.html" height="500px" width="900px"></iframe>
+                    <iframe src="./html/{title_str}.html" height="600px" width="1000px"></iframe>
+                    <iframe src="./html/{title_str}-pe.html" height="600px" width="1000px"></iframe>
                 </div>
     '''
     return merge_df, line, item_html_str
