@@ -178,8 +178,8 @@ def worker(stock_code, stock_name, support_line):
     item_html_str = f'''
                 <div class="col">
                     <h1>{title_str}</h1>
-                    <iframe src="../public/{title_str}.html" height="500px" width="900px"></iframe>
-                    <iframe src="../public/{title_str}-pe.html" height="500px" width="900px"></iframe>
+                    <iframe src="./html/{title_str}.html" height="500px" width="900px"></iframe>
+                    <iframe src="./html/{title_str}-pe.html" height="500px" width="900px"></iframe>
                 </div>
     '''
     return merge_df, line, item_html_str
@@ -357,7 +357,7 @@ html_end_str = '''
 
 index_html_str = '\n'.join([index_html_str, html_end_str])
 
-with open('./public/html/idnex.html', 'w+') as fp:
+with open('./public/idnex.html', 'w+') as fp:
     fp.write(index_html_str)
 
 
