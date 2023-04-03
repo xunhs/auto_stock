@@ -162,8 +162,7 @@ def get_stock_index_his_data(symbol, tag=1):
         today = datetime.date.today()
         yesterday = get_yesterday(n=10)
         stock_index_df = yf.download(symbol,yesterday,today)
-        _date = stock_index_df.index.tolist()
-        stock_index_df['date'] = pd.to_datetime(_date).dt.date
+        stock_index_df['date'] = stock_index_df.index.to_pydatetime()
         stock_index_df['close'] = stock_index_df['Close']
         stock_index_df = stock_index_df.reset_index()
     return stock_index_df
