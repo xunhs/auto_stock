@@ -1,4 +1,5 @@
 import akshare as ak
+import yfinance as yf  
 from datetime import datetime, timedelta
 import numpy as np
 import datetime
