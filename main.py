@@ -147,11 +147,31 @@ stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
 fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
 '''
 
+def get_stock_index_his_data(symbol, tag=1):
+    '''
+        tag: 1=from 腾讯证券（https://stockapp.finance.qq.com/mstats/）
+        tag: 2=from finance.yahoo.com（https://finance.yahoo.com/）
+        return stock_index_df
+    '''
+    stock_index_df = None
+    if tag == 1:
+        stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=symbol)
+        stock_index_df = stock_zh_index_daily_df
+    elif tag == 2:
+        today = datetime.date.today()
+        yesterday = get_yesterday(n=10)
+        stock_index_df = yf.download(symbol,yesterday,today)
+        stock_index_df['date'] = stock_index_df.index
+        stock_index_df['close'] = stock_index_df['Close']
+    return stock_index_df
+        
 
-def worker(stock_code, stock_name, support_line):
+
+def worker(stock_code, stock_name, support_line, tag=1):
     title_str = f'{stock_name}-{stock_code}'
     print(title_str)
-    stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
+    stock_index_df = get_stock_index_his_data(stock_code, tag)
+    
     symbol = stock_name
     indicator = "市盈率"
     hist_eval_pe_df = ak.index_value_hist_funddb(symbol=symbol, indicator=indicator)
@@ -165,7 +185,7 @@ def worker(stock_code, stock_name, support_line):
     hist_eval_pb_df['市净率估值'] = quantile_series
     hist_eval_pb_df = hist_eval_pb_df[['日期', '市净率', '市净率估值']]
 
-    merge_df = pd.merge(stock_zh_index_daily_df[['date', 'close']], hist_eval_pe_df, 
+    merge_df = pd.merge(stock_index_df[['date', 'close']], hist_eval_pe_df, 
             left_on='date', right_on='日期', how='inner')
     merge_df = pd.merge(merge_df[['date', 'close', '市盈率', '市盈率估值']], hist_eval_pb_df, 
             left_on='date', right_on='日期', how='inner')
@@ -286,6 +306,41 @@ support_line = 18800
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+
+stock_code = '^GSPC'
+stock_name = '标普500'
+support_line = 3000
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
+stock_code = '^NDX'
+stock_name = '纳斯达克100'
+support_line = 0
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+stock_code = '^GDAXI'
+stock_name = '德国DAX'
+support_line = 8200
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
+stock_code = '^N225'
+stock_name = '日经225'
+support_line = 0
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+stock_code = '^BSESN'
+stock_name = '印度SENSEX30'
+support_line = 0
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
+
 stock_code = 'sh000922'
 stock_name = '中证红利'
 support_line = 0
@@ -334,6 +389,11 @@ support_line = 931
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+stock_code = 'sh000827'
+stock_name = '中证环保'
+support_line = 931
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
 html_end_str = '''
