@@ -84,7 +84,7 @@ def get_stock_line(title_str, data_df, support_line):
     return line
 
 
-def get_pe_line(title_str, data_df):
+def get_pe_line(title_str, data_df, indicator = "市盈率"):
     one_day = get_yesterday(10)
     first = data_df.loc[0, 'date']
     if first < one_day:
@@ -98,7 +98,7 @@ def get_pe_line(title_str, data_df):
     line.add_xaxis(xaxis_data=date_list)
 
 
-    indicator = "市盈率"
+    
     pe_values = data_df[indicator].tolist()
     line.add_yaxis(
         series_name=indicator,
@@ -199,11 +199,14 @@ def worker(stock_code, stock_name, support_line, tag=1):
     line.render(f'./public/html/{title_str}.html')
     pe_line = get_pe_line(title_str, merge_df)
     pe_line.render(f'./public/html/{title_str}-pe.html')
+    pb_line = get_pe_line(title_str, merge_df, indicator="市净率")
+    pb_line.render(f'./public/html/{title_str}-pb.html')
     item_html_str = f'''
                 <div class="col">
                     <h1>{title_str}</h1>
                     <iframe src="./html/{title_str}.html" height="600px" width="1000px"></iframe>
                     <iframe src="./html/{title_str}-pe.html" height="600px" width="1000px"></iframe>
+                    <iframe src="./html/{title_str}-pb.html" height="600px" width="1000px"></iframe>
                 </div>
     '''
     return merge_df, line, item_html_str
