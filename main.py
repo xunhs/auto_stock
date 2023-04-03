@@ -401,7 +401,7 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000827'
 stock_name = '中证环保'
-support_line = 931
+support_line = 2020
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
