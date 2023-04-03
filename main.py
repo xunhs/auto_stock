@@ -295,17 +295,28 @@ support_line = 5880
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
-stock_code = 'hkHSI'
-stock_name = '恒生指数'
-support_line = 18800
+stock_code = 'sh000922'
+stock_name = '中证红利'
+support_line = 0
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
 
 stock_code = 'sz399006'
 stock_name = '创业板指'
 support_line = 18800
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
+
+stock_code = 'hkHSI'
+stock_name = '恒生指数'
+support_line = 18800
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
 
 
 stock_code = '^GSPC'
@@ -341,12 +352,6 @@ _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
-
-stock_code = 'sh000922'
-stock_name = '中证红利'
-support_line = 0
-_, _, item_html_str = worker(stock_code, stock_name, support_line)
-index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000991'
 stock_name = '全指医药'
