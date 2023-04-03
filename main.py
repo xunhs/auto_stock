@@ -186,7 +186,9 @@ def worker(stock_code, stock_name, support_line, tag=1):
     quantile_series = pd.qcut(hist_eval_pb_df['市净率'], q=[0, 0.2, 0.4, 0.6, 1], labels=['低估','正常','偏高','高估'])
     hist_eval_pb_df['市净率估值'] = quantile_series
     hist_eval_pb_df = hist_eval_pb_df[['日期', '市净率', '市净率估值']]
-
+    
+    
+    stock_index_df['date'] = pd.to_datetime(stock_index_df['date']).dt.date
     merge_df = pd.merge(stock_index_df[['date', 'close']], hist_eval_pe_df, 
             left_on='date', right_on='日期', how='inner')
     merge_df = pd.merge(merge_df[['date', 'close', '市盈率', '市盈率估值']], hist_eval_pb_df, 
