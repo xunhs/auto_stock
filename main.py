@@ -107,16 +107,14 @@ def get_pe_line(title_str, data_df, indicator = "市盈率"):
 
 
     _max = np.max(pe_values)
-    pe_80 = np.percentile(pe_values,80)
+    pe_90 = np.percentile(pe_values,90)
+    pe_75 = np.percentile(pe_values,75)
     average = np.mean(pe_values)
     pe_20 = np.percentile(pe_values,20)
     pe_10 = np.percentile(pe_values,10)
     _min = np.min(pe_values)
     now = pe_values[-1]   
-    tag = ''
-    if now > pe_20:
-        tag = '-'
-    subtitle_str = '目前点位{}，距离20分位{}{}%'.format(now, tag, round((now-pe_20)/now * 100,2))
+    subtitle_str = '目前点位{}，距离20分位{}%, 距离10分位{}%'.format(now, round((now-pe_20)/now * 100,2), round((now-pe_10)/now * 100,2))
 
     line.set_global_opts(
         title_opts=opts.TitleOpts(title='{}-{}'.format(title_str, indicator), subtitle=subtitle_str),
@@ -130,7 +128,8 @@ def get_pe_line(title_str, data_df, indicator = "市盈率"):
         
         markline_opts=opts.MarkLineOpts(
             data=[
-                opts.MarkLineItem(y=pe_80, name="pe_80",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)')),
+                opts.MarkLineItem(y=pe_90, name="pe_90",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)')),
+                opts.MarkLineItem(y=pe_75, name="pe_75",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)')),
                 opts.MarkLineItem(y=average, name="average",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(232, 197, 107)')),
                 opts.MarkLineItem(y=pe_20, name="pe_20",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(41, 157, 144)')),
                 opts.MarkLineItem(y=pe_10, name="pe_10",linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(38, 70, 83)')),
@@ -310,7 +309,7 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399006'
 stock_name = '创业板指'
-support_line = 18800
+support_line = 0
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
