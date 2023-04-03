@@ -271,12 +271,6 @@ index_html_str = '''
 
 '''
 
-stock_code = '^GSPC'
-stock_name = '标普500'
-support_line = 3000
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
-index_html_str = '\n'.join([index_html_str, item_html_str])
-
 
 
 stock_code = 'sh000001'
@@ -326,6 +320,11 @@ _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
+stock_code = '^GSPC'
+stock_name = '标普500'
+support_line = 3000
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
+index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
 
