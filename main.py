@@ -161,26 +161,34 @@ stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
 fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
 '''
 
-def get_stock_index_his_data(symbol, tag=1):
+def get_stock_index_his_data(symbol, title_str, tag=1):
     '''
         tag: 1=from 腾讯证券（https://stockapp.finance.qq.com/mstats/）
         tag: 2=from finance.yahoo.com（https://finance.yahoo.com/）
         return stock_index_df
     '''
     stock_index_df = None
-    if tag == 1:
-        stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=symbol)
-        stock_index_df = stock_zh_index_daily_df
-    elif tag == 2:
-        today = datetime.date.today()
-        yesterday = get_yesterday(n=10)
-        stock_index_df = yf.download(symbol,yesterday,today)
-        stock_index_df['date'] = stock_index_df.index
-        stock_index_df['close'] = stock_index_df['Close']
-        stock_index_df = stock_index_df.reset_index()
+    try:
+        if tag == 1:
+            stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=symbol)
+            stock_index_df = stock_zh_index_daily_df
+        elif tag == 2:
+            today = datetime.date.today()
+            yesterday = get_yesterday(n=10)
+            stock_index_df = yf.download(symbol,yesterday,today)
+            stock_index_df['date'] = stock_index_df.index
+            stock_index_df['close'] = stock_index_df['Close']
+            stock_index_df = stock_index_df.reset_index()
+
+            
+    except:
+        print('get_stock_index_his_data failed, read the cache data')
+        _url = f'https://github.com/xunhs/auto_stock/raw/public/data/{title_str}.csv'
+        stock_index_df = pd.read_csv(_url, header=0)
+        
     # for datetime error
-    stock_index_df.to_csv(f'./public/data/{symbol}.csv', header=True, index=False)
-    stock_index_df = pd.read_csv(f'./public/data/{symbol}.csv', header=0)
+    stock_index_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
+    stock_index_df = pd.read_csv(f'./public/data/{title_str}.csv', header=0)
     stock_index_df['date'] = pd.to_datetime(stock_index_df['date']).dt.date
     return stock_index_df
         
@@ -189,7 +197,7 @@ def get_stock_index_his_data(symbol, tag=1):
 def worker(stock_code, stock_name, support_line, tag=1):
     title_str = f'{stock_name}-{stock_code}'
     print(title_str)
-    stock_index_df = get_stock_index_his_data(stock_code, tag)
+    stock_index_df = get_stock_index_his_data(stock_code, title_str, tag)
     
     symbol = stock_name
     indicator = "市盈率"
