@@ -45,19 +45,24 @@ def get_stock_line(title_str, data_df, support_line):
         series_name="收盘价",
         y_axis=stock_values,
     )
-
-    support_line_define = support_line
+    
+    
+    min_support_line = None
+    _list = []
+    for (support_name,support_value) in support_line.items():
+        if '支撑' in str(support_name) and support_value != None:
+            _list.append(support_value)
+    if _list != []:
+        min_support_line = min(_list)
+    
     support_line_70 = max(stock_values) * 0.3
     support_line_80 = max(stock_values) * 0.2
     _max = np.max(stock_values)
     _min = np.min(stock_values)
     now = stock_values[-1]   
-    tag = ''
-    if now > support_line_define:
-        tag = '-'
-    subtitle_str = '目前点位{}，距离支撑位{}{}%'.format(now, tag, round((now-support_line_define)/now * 100,2))
-    if support_line_define == 0:
-        subtitle_str = '目前点位{}，距离70%分位{}{}%'.format(now, tag, round((now-support_line_70)/now * 100,2))
+    subtitle_str = '目前点位{}，距离支撑位{}%'.format(now, round((now-min_support_line)/now * 100,2))
+    if min_support_line == None:
+        subtitle_str = '目前点位{}，距离70%分位{}%'.format(now, round((now-support_line_70)/now * 100,2))
 
     line.set_global_opts(
         title_opts=opts.TitleOpts(title=title_str, subtitle=subtitle_str),
@@ -70,10 +75,19 @@ def get_stock_line(title_str, data_df, support_line):
                 opts.MarkLineItem(y=support_line_70, name="70线", linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(38, 70, 83)')),
                 opts.MarkLineItem(y=support_line_80, name="80线", linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(38, 70, 83)')),
             ]
-    if support_line_define != 0:
-        _item = opts.MarkLineItem(y=support_line_define, name="支撑位", linestyle_opts=opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)'))
-        markline_data.append(_item)
-
+    
+    for (support_name,support_value) in support_line.items():
+        if '支撑' in str(support_name) and support_value != None:
+            _linestyle_opts = opts.LineStyleOpts(type_='dashed',color='rgb(232, 197, 107)')
+            _item = opts.MarkLineItem(y=support_value, name=support_name, linestyle_opts=_linestyle_opts)
+            markline_data.append(_item)
+        elif '压力' in str(support_name) and support_value != None:
+            _linestyle_opts = opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)')
+            _item = opts.MarkLineItem(y=support_value, name=support_name, linestyle_opts=_linestyle_opts)
+            markline_data.append(_item)
+        else:
+            print('support_line drawing error!')
+            break
 
     line.set_series_opts(
         yaxis_opts=opts.AxisOpts(max_='dataMax', min_='dataMin'),
@@ -273,135 +287,134 @@ index_html_str = '''
 
 '''
 
-
-
 stock_code = 'sh000001'
 stock_name = '上证指数'
-support_line = 2800
+support_line = {'支撑位': 2800, '压力位': 3260}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000300'
 stock_name = '沪深300'
-support_line = 3500
+support_line = {'支撑位': 3500, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000905'
 stock_name = '中证500'
-support_line = 4800
+support_line = {'支撑位': 4800, '压力位': 8100}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000852'
 stock_name = '中证1000'
-support_line = 5880
+support_line = {'支撑位': 5880, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000922'
 stock_name = '中证红利'
-support_line = 0
+support_line = {'支撑位': 4750, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
-
-
 
 stock_code = 'sz399006'
 stock_name = '创业板指'
-support_line = 0
+support_line = {'支撑位': 1680, '压力位': 2570}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
-
 
 
 stock_code = 'hkHSI'
 stock_name = '恒生指数'
-support_line = 18800
+support_line = {'支撑位1': 18800, '压力位1': 22400, '压力位2': 25500, '压力位3': 33000}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
 stock_code = '^GSPC'
 stock_name = '标普500'
-support_line = 3000
+support_line = {'支撑位': 3000, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
-
 stock_code = '^NDX'
 stock_name = '纳斯达克100'
-support_line = 0
+support_line = {'支撑位': None, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = '^GDAXI'
 stock_name = '德国DAX'
-support_line = 8200
+support_line = {'支撑位': 8200, '压力位': 11000}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
 stock_code = '^N225'
 stock_name = '日经225'
-support_line = 0
+support_line = {'支撑位': None, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = '^BSESN'
 stock_name = '印度SENSEX30'
-support_line = 0
+support_line = {'支撑位': None, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
-
-
 stock_code = 'sh000991'
 stock_name = '全指医药'
-support_line = 9700
+support_line = {'支撑位1': 9700, '支撑位2': 11055, '压力位1': 12300, '压力位2': 13500, '压力位3': 17300}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399989'
 stock_name = '中证医疗'
-support_line = 7900
+support_line = {'支撑位1': 7900, '支撑位2': 10200, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000990'
 stock_name = '全指消费'
-support_line = 11700
+support_line = {'支撑位': 11700, '压力位': 17700}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399967'
 stock_name = '中证军工'
-support_line = 8300
+support_line = {'支撑位': 8300, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'hkHSTECH'
 stock_name = '恒生科技指数'
-support_line = 0
+support_line = {'支撑位': None, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000993'
 stock_name = '全指信息'
-support_line = 4600
+support_line = {'支撑位': 4600, '压力位1': 6300, '压力位2': 7500}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399971'
 stock_name = '中证传媒'
-support_line = 931
+support_line = {'支撑位1': 931, '支撑位2': 1220, '压力位1': 1400, '压力位2': 1700}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000827'
 stock_name = '中证环保'
-support_line = 2020
+support_line = {'支撑位1': 1836, '支撑位2': 2020, '压力位': None}
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
+stock_code = 'sz399975'
+stock_name = '证券公司'
+support_line = {'支撑位': 600, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
