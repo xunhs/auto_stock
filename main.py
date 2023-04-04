@@ -86,8 +86,8 @@ def get_stock_line(title_str, data_df, support_line):
             _item = opts.MarkLineItem(y=support_value, name=support_name, linestyle_opts=_linestyle_opts)
             markline_data.append(_item)
         else:
-            print('support_line drawing error!')
-            break
+            print(f'{support_name} is {support_value}!')
+            
 
     line.set_series_opts(
         yaxis_opts=opts.AxisOpts(max_='dataMax', min_='dataMin'),
@@ -175,9 +175,15 @@ def get_stock_index_his_data(symbol, tag=1):
         today = datetime.date.today()
         yesterday = get_yesterday(n=10)
         stock_index_df = yf.download(symbol,yesterday,today)
-        stock_index_df['date'] = stock_index_df.index.to_pydatetime()
+        stock_index_df['date'] = stock_index_df.index
         stock_index_df['close'] = stock_index_df['Close']
         stock_index_df = stock_index_df.reset_index()
+        # for datetime error
+        stock_index_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
+        stock_index_df = pd.read_csv(f'./public/data/{title_str}.csv', header=0)
+        stock_index_df['date'] = pd.to_datetime(stock_index_df['date']).dt.date
+        
+        
     return stock_index_df
         
 
@@ -199,9 +205,8 @@ def worker(stock_code, stock_name, support_line, tag=1):
     quantile_series = pd.qcut(hist_eval_pb_df['市净率'], q=[0, 0.2, 0.4, 0.6, 1], labels=['低估','正常','偏高','高估'])
     hist_eval_pb_df['市净率估值'] = quantile_series
     hist_eval_pb_df = hist_eval_pb_df[['日期', '市净率', '市净率估值']]
+
     
-    
-    stock_index_df['date'] = pd.to_datetime(stock_index_df['date']).dt.date
     merge_df = pd.merge(stock_index_df[['date', 'close']], hist_eval_pe_df, 
             left_on='date', right_on='日期', how='inner')
     merge_df = pd.merge(merge_df[['date', 'close', '市盈率', '市盈率估值']], hist_eval_pb_df, 
