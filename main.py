@@ -65,10 +65,13 @@ def get_stock_line(title_str, data_df, support_line):
     _max = np.max(stock_values)
     _min = np.min(stock_values)
     now = stock_values[-1]   
-    subtitle_str = '目前点位{}，距离支撑位{}%'.format(now, round((now-min_support_line)/now * 100,2))
+    
     if min_support_line == None:
         subtitle_str = '目前点位{}，距离70%分位{}%'.format(now, round((now-support_line_70)/now * 100,2))
-
+    else:
+        subtitle_str = '目前点位{}，距离支撑位{}%'.format(now, round((now-min_support_line)/now * 100,2))
+    
+    
     line.set_global_opts(
         title_opts=opts.TitleOpts(title=title_str, subtitle=subtitle_str),
         # yaxis_opts=opts.AxisOpts(max_=_max, min_=_min),
