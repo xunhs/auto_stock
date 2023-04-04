@@ -169,23 +169,21 @@ def get_stock_index_his_data(symbol, title_str, tag=1):
         return stock_index_df
     '''
     stock_index_df = None
-    try:
-        if tag == 1:
-            stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=symbol)
-            stock_index_df = stock_zh_index_daily_df
-        elif tag == 2:
-            today = datetime.date.today()
-            yesterday = get_yesterday(n=10)
-            stock_index_df = yf.download(symbol,yesterday,today)
-            stock_index_df['date'] = stock_index_df.index
-            stock_index_df['close'] = stock_index_df['Close']
-            stock_index_df = stock_index_df.reset_index()
 
-            
-    except:
-        print('get_stock_index_his_data failed, read the cache data')
-        _url = f'https://github.com/xunhs/auto_stock/raw/public/data/{title_str}.csv'
-        stock_index_df = pd.read_csv(_url, header=0)
+    if tag == 1:
+        stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=symbol)
+        stock_index_df = stock_zh_index_daily_df
+    elif tag == 2:
+        today = datetime.date.today()
+        yesterday = get_yesterday(n=10)
+        stock_index_df = yf.download(symbol,yesterday,today)
+        stock_index_df['date'] = stock_index_df.index
+        stock_index_df['close'] = stock_index_df['Close']
+        stock_index_df = stock_index_df.reset_index()
+        if stock_index_df.shape[0] == 0:
+            print('get_stock_index_his_data failed, read the cache data')
+            _url = f'https://github.com/xunhs/auto_stock/raw/public/data/{title_str}.csv'
+            stock_index_df = pd.read_csv(_url, header=0)
         
     # for datetime error
     stock_index_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
