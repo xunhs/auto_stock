@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+
 import akshare as ak
 import yfinance as yf  
 from datetime import datetime, timedelta
 import numpy as np
 import datetime
 import pandas as pd
+import io
+import requests
 
 import pyecharts.options as opts
 from pyecharts.charts import Line, Timeline
@@ -183,7 +187,8 @@ def get_stock_index_his_data(symbol, title_str, tag=1):
         if stock_index_df.shape[0] == 0:
             print('get_stock_index_his_data failed, read the cache data')
             _url = f'https://github.com/xunhs/auto_stock/raw/public/data/{title_str}.csv'
-            stock_index_df = pd.read_csv(_url, header=0)
+            s=requests.get(_url).content
+            stock_index_df=pd.read_csv(io.StringIO(s.decode('utf-8')), header=0)
         
     # for datetime error
     stock_index_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
