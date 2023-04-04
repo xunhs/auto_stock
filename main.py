@@ -178,12 +178,10 @@ def get_stock_index_his_data(symbol, tag=1):
         stock_index_df['date'] = stock_index_df.index
         stock_index_df['close'] = stock_index_df['Close']
         stock_index_df = stock_index_df.reset_index()
-        # for datetime error
-        stock_index_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-        stock_index_df = pd.read_csv(f'./public/data/{title_str}.csv', header=0)
-        stock_index_df['date'] = pd.to_datetime(stock_index_df['date']).dt.date
-        
-        
+    # for datetime error
+    stock_index_df.to_csv(f'./public/data/{symbol}.csv', header=True, index=False)
+    stock_index_df = pd.read_csv(f'./public/data/{symbol}.csv', header=0)
+    stock_index_df['date'] = pd.to_datetime(stock_index_df['date']).dt.date
     return stock_index_df
         
 
