@@ -368,6 +368,13 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 # _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 # index_html_str = '\n'.join([index_html_str, item_html_str])
 
+stock_code = 'sh513030'
+stock_name = '德国DAX'
+support_line = {'支撑位': None, '压力位': None}
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
 
 # stock_code = '^N225'
 # stock_name = '日经225'
@@ -375,11 +382,29 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 # _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 # index_html_str = '\n'.join([index_html_str, item_html_str])
 
+
+stock_code = 'sh513520'
+stock_name = '日经225'
+support_line = {'支撑位': None, '压力位': None}
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
+
 # stock_code = '^BSESN'
 # stock_name = '印度SENSEX30'
 # support_line = {'支撑位': None, '压力位': None}
 # _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
 # index_html_str = '\n'.join([index_html_str, item_html_str])
+
+stock_code = 'sz164824'
+stock_name = '印度SENSEX30'
+support_line = {'支撑位': None, '压力位': None}
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
+
 
 stock_code = 'sh000991'
 stock_name = '全指医药'
