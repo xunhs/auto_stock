@@ -437,6 +437,14 @@ _, _, item_html_str = worker(stock_code, stock_name, support_line)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
+
+stock_code = 'sz399393'
+stock_name = '房地产(申万)'
+support_line = {'支撑位': None, '压力位': None}
+_, _, item_html_str = worker(stock_code, stock_name, support_line)
+index_html_str = '\n'.join([index_html_str, item_html_str])
+
+
 html_end_str = '''
 
 
