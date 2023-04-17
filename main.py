@@ -293,11 +293,25 @@ index_html_str = '''
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS only -->
+    <link rel="stylesheet" href="https://unpkg.com/autocjs@1.3.0/dist/autoc.min.css">
+    <script type="text/javascript" src="https://unpkg.com/autocjs@1.3.0/dist/autoc.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <title>Auto Stock</title>
 </head>
 <body>
-
+<div class="entry-content clearfix ">
+        <div class='jupe' id='needtoc'>
+            {{ post_detail.body|safe }}
+            <div class="widget-tag-cloud">
+                <ul>
+                    标签：
+                    {% for tag1 in post_detail.tags.all %}
+                        <li><a href="{% url 'blog:tag' tag1.pk %}"># {{ tag1.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+</div>
     <div class="container">
         
         <div class="row align-items-start">
@@ -482,7 +496,17 @@ html_end_str = '''
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script src="{% static 'blog/js/script.js' %}"></script>
+        <script type="text/javascript">
+            new AutocJS({
+                article: '#needtoc',#文章的ID选择器名称
+                isOnlyAnchors: true,
+                //selector: 'h1',
+                // 不配置 selector 属性，即使用默认选择器
+                title: '文章目录',
+            });
 
+        </script>
 </body>
 </html>
 
