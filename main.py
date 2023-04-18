@@ -295,70 +295,7 @@ index_html_str = '''
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <title>Auto Stock</title>
-    <style type="text/css">
-    #wrap {
-        width: 600px;
-        margin: 0 auto;
-    }
-
-    .toc_root {
-        display: inline-block;
-        min-width: 225px;
-        padding: 20px 10px 10px;
-        background: #f9f9f9;
-        line-height: 2;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        font-size: 1em;
-    }
-
-    .toc_wrap a {
-        color: #75b17d;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .toc_wrap a:hover {
-        text-decoration: underline;
-        color: #333;
-    }
-
-    .toc_wrap.hide .toc_root {
-        display: none;
-    }
-
-    .toc_wrap.hide .show_toc_btn {
-        display: inline-block;
-    }
-
-    .toc_root {
-        position: relative;
-    }
-
-    .toc_lvl {
-        display: block;
-        padding-left: 22px;
-    }
-
-    .toc_lvl_1 {
-        padding-left: 0;
-    }
-
-    .toc_wrap .hide_toc_btn {
-        position: absolute;
-        top: 4px;
-        right: 10px;
-    }
-
-    .toc_wrap .show_toc_btn {
-        display: none;
-        padding: 10px;
-        margin-bottom: 20px;
-        background: #f9f9f9;
-        line-height: 1.5;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        font-size: 1em;
-    }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yaohaixiao/autocjs/dist/css/autoc.min.css">
 </head>
 <body>
     <div class="container">
@@ -542,13 +479,13 @@ html_end_str = '''
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/auto-toc-js@1.0.0/dist/toc.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/yaohaixiao/autocjs/dist/autoc.min.js"></script>
     <script type="text/javascript">
-    new Toc({
-        wrapperId: 'wrap',
-        insertId: 'wrap',
-        showSerial: true
-    }).createToc();
+         new AutocJs({
+            article: '#wrap',
+            title: '文章目录',
+            position: 'outside',
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 </body>
