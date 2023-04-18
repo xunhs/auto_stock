@@ -65,11 +65,13 @@ def get_stock_line(title_str, data_df, support_line):
     _max = np.max(stock_values)
     _min = np.min(stock_values)
     now = stock_values[-1]   
+    now_per = (_max - _min) / 100 * (now - _min)
     
     if min_support_line == None:
-        subtitle_str = '目前点位{}，距离70%分位{}%'.format(now, round((now-support_line_70)/now * 100,2))
+        dis_per = (now-support_line_70)/now * 100
     else:
-        subtitle_str = '目前点位{}，距离支撑位{}%'.format(now, round((now-min_support_line)/now * 100,2))
+        dis_per = (now-min_support_line)/now * 100
+    subtitle_str = '目前点位{}，所处百分位{}%，距离支撑位{}%'.format(now, round(now_per, 2), round(dis_per,2))
     
     
     line.set_global_opts(
@@ -164,6 +166,9 @@ def get_pe_line(title_str, data_df, indicator = "市盈率"):
 
 '''
 获取指数：
+目标地址: https://finance.sina.com.cn/realstock/company/sz399552/nc.shtml(示例)
+stock_zh_index_daily_df = ak.stock_zh_index_daily(symbol=stock_code)
+目标地址: http://gu.qq.com/sh000919/zs
 stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=stock_code)
 获取基金：
 fund_open_fund_info_em_df = ak.fund_open_fund_info_em(fund=fc, indicator="单位净值走势")
@@ -178,7 +183,7 @@ def get_stock_index_his_data(symbol, title_str, tag=1):
     stock_index_df = None
 
     if tag == 1:
-        stock_zh_index_daily_df = ak.stock_zh_index_daily_tx(symbol=symbol)
+        stock_zh_index_daily_df = ak.stock_zh_index_daily(symbol=symbol)
         stock_index_df = stock_zh_index_daily_df
     elif tag == 2:
         today = datetime.date.today()
