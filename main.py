@@ -233,8 +233,8 @@ def worker(stock_code, stock_name, support_line, tag=1):
     pb_line = get_pe_line(title_str, merge_df, indicator="市净率")
     pb_line.render(f'./public/html/{title_str}-pb.html')
     item_html_str = f'''
+                <h1>{title_str}</h1>
                 <div class="col">
-                    <h1>{title_str}</h1>
                     <iframe src="./html/{title_str}.html" height="600px" width="1000px"></iframe>
                     <iframe src="./html/{title_str}-pe.html" height="600px" width="1000px"></iframe>
                     <iframe src="./html/{title_str}-pb.html" height="600px" width="1000px"></iframe>
@@ -273,8 +273,8 @@ def worker_test(stock_code, stock_name, support_line):
     line = get_stock_line(title_str, merge_df, support_line)
     line.render(f'./public/html/{title_str}.html')
     item_html_str = f'''
+                <h1>{title_str}</h1>
                 <div class="col">
-                    <h1>{title_str}</h1>
                     <iframe src="./{title_str}.html" height="500px" width="900px"></iframe>
                     <iframe src="./{title_str}-pe.html" height="500px" width="900px"></iframe>
                 </div>
@@ -361,9 +361,8 @@ index_html_str = '''
     </style>
 </head>
 <body>
-    <div class="container"  id="wrap">
-        
-        <div class="row align-items-start">
+    <div class="container">
+        <div class="row align-items-start" id="wrap">
 
 
 '''
