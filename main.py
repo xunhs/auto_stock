@@ -293,26 +293,75 @@ index_html_str = '''
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS only -->
-    <link rel="stylesheet" href="https://unpkg.com/autocjs@1.3.0/dist/autoc.min.css">
-    <script type="text/javascript" src="https://unpkg.com/autocjs@1.3.0/dist/autoc.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <title>Auto Stock</title>
+    <style type="text/css">
+    #wrap {
+        width: 600px;
+        margin: 0 auto;
+    }
+
+    .toc_root {
+        display: inline-block;
+        min-width: 225px;
+        padding: 20px 10px 10px;
+        background: #f9f9f9;
+        line-height: 2;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 1em;
+    }
+
+    .toc_wrap a {
+        color: #75b17d;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .toc_wrap a:hover {
+        text-decoration: underline;
+        color: #333;
+    }
+
+    .toc_wrap.hide .toc_root {
+        display: none;
+    }
+
+    .toc_wrap.hide .show_toc_btn {
+        display: inline-block;
+    }
+
+    .toc_root {
+        position: relative;
+    }
+
+    .toc_lvl {
+        display: block;
+        padding-left: 22px;
+    }
+
+    .toc_lvl_1 {
+        padding-left: 0;
+    }
+
+    .toc_wrap .hide_toc_btn {
+        position: absolute;
+        top: 4px;
+        right: 10px;
+    }
+
+    .toc_wrap .show_toc_btn {
+        display: none;
+        padding: 10px;
+        margin-bottom: 20px;
+        background: #f9f9f9;
+        line-height: 1.5;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 1em;
+    }
+    </style>
 </head>
 <body>
-<div class="entry-content clearfix ">
-        <div class='jupe' id='needtoc'>
-            {{ post_detail.body|safe }}
-            <div class="widget-tag-cloud">
-                <ul>
-                    标签：
-                    {% for tag1 in post_detail.tags.all %}
-                        <li><a href="{% url 'blog:tag' tag1.pk %}"># {{ tag1.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-</div>
-    <div class="container">
+    <div class="container"  id="wrap">
         
         <div class="row align-items-start">
 
@@ -494,19 +543,15 @@ html_end_str = '''
     </div>
 
 
-
+    <script src="https://cdn.jsdelivr.net/npm/auto-toc-js@1.0.0/dist/toc.min.js"></script>
+    <script type="text/javascript">
+    new Toc({
+        wrapperId: 'wrap',
+        insertId: 'wrap',
+        showSerial: true
+    }).createToc();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-    <script src="{% static 'blog/js/script.js' %}"></script>
-        <script type="text/javascript">
-            new AutocJS({
-                article: '#needtoc',#文章的ID选择器名称
-                isOnlyAnchors: true,
-                //selector: 'h1',
-                // 不配置 selector 属性，即使用默认选择器
-                title: '文章目录',
-            });
-
-        </script>
 </body>
 </html>
 
