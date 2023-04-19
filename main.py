@@ -316,37 +316,37 @@ index_html_str = '''
 stock_code = 'sh000001'
 stock_name = '上证指数'
 support_line = {'支撑位': 2800, '压力位': 3260}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000300'
 stock_name = '沪深300'
 support_line = {'支撑位': 3500, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000905'
 stock_name = '中证500'
 support_line = {'支撑位': 4800, '压力位': 8100}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000852'
 stock_name = '中证1000'
 support_line = {'支撑位': 5880, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000922'
 stock_name = '中证红利'
 support_line = {'支撑位': 4750, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399006'
 stock_name = '创业板指'
 support_line = {'支撑位': 1680, '压力位': 2570}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
@@ -379,7 +379,7 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 stock_code = 'sh513030'
 stock_name = '德国DAX'
 support_line = {'支撑位': None, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
@@ -394,7 +394,7 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 stock_code = 'sh513520'
 stock_name = '日经225'
 support_line = {'支撑位': None, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
@@ -408,7 +408,7 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 stock_code = 'sz164824'
 stock_name = '印度SENSEX30'
 support_line = {'支撑位': None, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
@@ -417,25 +417,25 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 stock_code = 'sh000991'
 stock_name = '全指医药'
 support_line = {'支撑位1': 9700, '支撑位2': 11055, '压力位1': 12300, '压力位2': 13500, '压力位3': 17300}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399989'
 stock_name = '中证医疗'
 support_line = {'支撑位1': 7900, '支撑位2': 10200, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000990'
 stock_name = '全指消费'
 support_line = {'支撑位': 11700, '压力位': 17700}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399967'
 stock_name = '中证军工'
 support_line = {'支撑位': 8300, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'hkHSTECH'
@@ -447,26 +447,26 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 stock_code = 'sh000993'
 stock_name = '全指信息'
 support_line = {'支撑位': 4600, '压力位1': 6300, '压力位2': 7500}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399971'
 stock_name = '中证传媒'
 support_line = {'支撑位1': 931, '支撑位2': 1220, '压力位1': 1400, '压力位2': 1700}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sh000827'
 stock_name = '中证环保'
 support_line = {'支撑位1': 1836, '支撑位2': 2020, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
 stock_code = 'sz399975'
 stock_name = '证券公司'
 support_line = {'支撑位': 600, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
@@ -474,7 +474,7 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 stock_code = 'sz399393'
 stock_name = '房地产(申万)'
 support_line = {'支撑位': None, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=3)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
