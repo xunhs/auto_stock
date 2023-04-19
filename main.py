@@ -65,7 +65,7 @@ def get_stock_line(title_str, data_df, support_line):
     _max = np.max(stock_values)
     _min = np.min(stock_values)
     now = stock_values[-1]   
-    now_per = (_max - _min) / 100 * (now - _min)
+    now_per = 100 / (_max - _min) * (now - _min)
     
     if min_support_line == None:
         dis_per = (now-support_line_70)/now * 100
