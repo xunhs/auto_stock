@@ -33,7 +33,7 @@ def get_yesterday(n=10):
 def get_stock_line(title_str, data_df, support_line):
     
 #     one_day = get_yesterday(10)
-#     date_list = data_df['date'].tolist()
+    date_list = data_df['date'].tolist()
 #     first = date_list[0]
 #     if first < one_day:
 #         data_df = data_df[data_df['date'] >= one_day]
@@ -110,7 +110,7 @@ def get_stock_line(title_str, data_df, support_line):
 
 def get_pe_line(title_str, data_df, indicator = "市盈率"):
 #     one_day = get_yesterday(10)
-#     date_list = data_df['date'].tolist()
+    date_list = data_df['date'].tolist()
 #     first = date_list[0]
 #     if first < one_day:
 #         data_df = data_df[data_df['date'] >= one_day]
