@@ -31,6 +31,11 @@ jobs:
         mkdir public
         mkdir public/html
         mkdir public/data
+        mkdir public/dist
+        cp autoc.min.css /dist
+        cp autoc.min.js /dist
+        cp bootstrap.min.css /dist
+        cp bootstrap.min.js /dist
         python main.py
         
     - name: Commit & Push
