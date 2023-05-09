@@ -302,9 +302,9 @@ index_html_str = '''
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS only -->
-    <link href="https://ghproxy.net/https://raw.githubusercontent.com/xunhs/auto_stock/main/bootstrap.min.css" rel="stylesheet">
+    <link href="../dist/bootstrap.min.css" rel="stylesheet">
     <title>Auto Stock</title>
-    <link href="https://ghproxy.net/https://raw.githubusercontent.com/xunhs/auto_stock/main/autoc.min.css" rel="stylesheet" >
+    <link href="../dist/autoc.min.css" rel="stylesheet" >
 </head>
 <body>
     <div class="container">
@@ -488,8 +488,8 @@ html_end_str = '''
     </div>
 
 
-    <script type="text/javascript" src="https://ghproxy.net/https://raw.githubusercontent.com/xunhs/auto_stock/main/autoc.min.js"></script>
-    <script src="https://ghproxy.net/https://raw.githubusercontent.com/xunhs/auto_stock/main/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../dist/autoc.min.js"></script>
+    <script src="../dist/bootstrap.min.js"></script>
     <script type="text/javascript">
          new AutocJs({
             article: '#wrap',
