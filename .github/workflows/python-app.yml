@@ -32,10 +32,10 @@ jobs:
         mkdir public/html
         mkdir public/data
         mkdir public/dist
-        cp autoc.min.css /public/dist/
-        cp autoc.min.js /public/dist/
-        cp bootstrap.min.css /public/dist/
-        cp bootstrap.min.js /public/dist/
+        cp autoc.min.css ./public/dist/
+        cp autoc.min.js ./public/dist/
+        cp bootstrap.min.css ./public/dist/
+        cp bootstrap.min.js ./public/dist/
         # python main.py
         
     - name: Commit & Push
