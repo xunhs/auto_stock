@@ -36,7 +36,7 @@ jobs:
         cp autoc.min.js ./public/dist/
         cp bootstrap.min.css ./public/dist/
         cp bootstrap.min.js ./public/dist/
-        # python main.py
+        python main.py
         
     - name: Commit & Push
       run: |
