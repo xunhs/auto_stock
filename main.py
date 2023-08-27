@@ -383,37 +383,6 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 # index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
-
-# stock_code = '^N225'
-# stock_name = '日经225'
-# support_line = {'支撑位': None, '压力位': None}
-# _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
-# index_html_str = '\n'.join([index_html_str, item_html_str])
-
-
-stock_code = 'sh513520'
-stock_name = '日经225'
-support_line = {'支撑位': None, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
-index_html_str = '\n'.join([index_html_str, item_html_str])
-
-
-
-# stock_code = '^BSESN'
-# stock_name = '印度SENSEX30'
-# support_line = {'支撑位': None, '压力位': None}
-# _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=2)
-# index_html_str = '\n'.join([index_html_str, item_html_str])
-
-# stock_code = 'sz164824'
-# stock_name = '印度SENSEX30'
-# support_line = {'支撑位': None, '压力位': None}
-# _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
-# index_html_str = '\n'.join([index_html_str, item_html_str])
-
-
-
-
 stock_code = 'sh000991'
 stock_name = '全指医药'
 support_line = {'支撑位1': 9700, '支撑位2': 11055, '压力位1': 12300, '压力位2': 13500, '压力位3': 17300}
@@ -469,13 +438,6 @@ support_line = {'支撑位': 600, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
-
-
-stock_code = 'sz399393'
-stock_name = '房地产(申万)'
-support_line = {'支撑位': None, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
-index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
 html_end_str = '''
