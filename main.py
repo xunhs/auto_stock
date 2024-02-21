@@ -30,7 +30,7 @@ def get_yesterday(n=10):
     return yesterday
 
 
-def get_stock_line(title_str, data_df, support_line):
+def get_stock_line(title_str, data_df, support_line, buy_date_str=None):
     
 #     one_day = get_yesterday(10)
     date_list = data_df['date'].tolist()
@@ -50,7 +50,19 @@ def get_stock_line(title_str, data_df, support_line):
         series_name="收盘价",
         y_axis=stock_values,
     )
-    
+    buy_price = 0.0
+    vol_sum = 0.0
+    if buy_date_str!=None:
+
+        for _str in buy_date_str.split(' '):
+            date_str, vol = _str.split('/')
+            year,month,day = [int(i) for i in date_str.split('.')]
+            vol = float(vol)
+            price = data_df.loc[data_df['date'] == datetime.date(year,month,day), 'close'].tolist()[0]
+            print(price)
+            buy_price += price * vol
+            vol_sum += vol
+        support_line['buy_price'] = buy_price / vol_sum 
     
     min_support_line = None
     _list = []
@@ -71,6 +83,8 @@ def get_stock_line(title_str, data_df, support_line):
         dis_per = (now-support_line_70)/now * 100
     else:
         dis_per = (now-min_support_line)/now * 100
+    if vol_sum != 0.0:
+        subtitle_str = '目前点位{}，所处百分位{}%，距离支撑位{}%，购买份额{}，购买均价{}'.format(now, round(now_per, 2), round(dis_per,2), vol_sum, buy_price)
     subtitle_str = '目前点位{}，所处百分位{}%，距离支撑位{}%'.format(now, round(now_per, 2), round(dis_per,2))
     
     
@@ -95,8 +109,13 @@ def get_stock_line(title_str, data_df, support_line):
             _linestyle_opts = opts.LineStyleOpts(type_='dashed',color='rgb(230, 111, 81)')
             _item = opts.MarkLineItem(y=support_value, name=support_name, linestyle_opts=_linestyle_opts)
             markline_data.append(_item)
+        elif 'buy_price' in str(support_name) and support_value != None:
+            _linestyle_opts = opts.LineStyleOpts(type_='dashed',color='rgb(230, 0, 81)')
+            _item = opts.MarkLineItem(y=support_value, name=support_name, linestyle_opts=_linestyle_opts)
+            markline_data.append(_item)
         else:
             print(f'{support_name} is {support_value}!')
+            
             
 
     line.set_series_opts(
@@ -210,7 +229,7 @@ def get_stock_index_his_data(symbol, title_str, tag=1):
         
 
 
-def worker(stock_code, stock_name, support_line, tag=1):
+def worker(stock_code, stock_name, support_line, buy_date_str=None, tag=1):
     title_str = f'{stock_name}-{stock_code}'
     print(title_str)
     stock_index_df = get_stock_index_his_data(stock_code, title_str, tag)
@@ -235,7 +254,7 @@ def worker(stock_code, stock_name, support_line, tag=1):
             left_on='date', right_on='日期', how='inner')
     merge_df = merge_df.drop(['日期'], axis=1)
     merge_df.to_csv(f'./public/data/{title_str}.csv', header=True, index=False)
-    line = get_stock_line(title_str, merge_df, support_line)
+    line = get_stock_line(title_str, merge_df, support_line, buy_date_str)
     line.render(f'./public/html/{title_str}.html')
     pe_line = get_pe_line(title_str, merge_df)
     pe_line.render(f'./public/html/{title_str}-pe.html')
@@ -319,37 +338,42 @@ support_line = {'支撑位': 2800, '压力位': 3260}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2022.5.9/0.25 2022.5.19/0.5 2022.5.23/1.5 2022.5.24/1 2022.9.20/1 2023.8.17/1 2023.8.31/1 2023.10.10/0.75 2023.10.16/1 2023.10.19/2 2023.11.27/1 2023.12.5/1 2023.12.26/1'
 stock_code = 'sh000300'
 stock_name = '沪深300'
 support_line = {'支撑位': 3500, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2022.1.19/2.5 2022.4.28/0.5 2022.5.22/0.5 2022.5.24/2 2022.8.2/1 2022.8.18/1 2022.8.24/1 2022.8.31/1'
 stock_code = 'sh000905'
 stock_name = '中证500'
 support_line = {'支撑位': 4800, '压力位': 8100}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2023.8.17/1 2024.1.18/1'
 stock_code = 'sh000852'
 stock_name = '中证1000'
 support_line = {'支撑位': 5880, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2022.4.28/0.5 2022.5.10/0.5 2022.5.17/0.5 2022.5.19/0.5 2022.7.18/1 2022.7.26/1 2022.8.18/1 2022.8.24/1 2022.8.31/1 2022.12.16/1.5'
 stock_code = 'sh000922'
 stock_name = '中证红利'
 support_line = {'支撑位': 4750, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2023.3.31/2 2023.4.3/2 2023.8.30/2 2023.12.12/2 2024.1.10/2'
 stock_code = 'sz399006'
 stock_name = '创业板指'
 support_line = {'支撑位': 1680, '压力位': 2570}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
-
+buy_date_str = '2022.4.28/0.5 2022.5.6/0.5 2022.5.10/0.5 2022.5.12/0.5 2022.6.13/1 2022.7.5/1 2022.10.21/2 2023.8.21/2 2023.11.29/2'
 stock_code = 'hkHSI'
 stock_name = '恒生指数'
 support_line = {'支撑位1': 18800, '压力位1': 22400, '压力位2': 25500, '压力位3': 33000}
@@ -395,6 +419,7 @@ support_line = {'支撑位1': 7900, '支撑位2': 10200, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2024.2.5/2'
 stock_code = 'sh000990'
 stock_name = '全指消费'
 support_line = {'支撑位': 11700, '压力位': 17700}
@@ -407,12 +432,14 @@ support_line = {'支撑位': 8300, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2022.1.10/1.25 2022.1.12/1.25 2022.1.19/1.25 2022.2.9/1.25 2022.3.18/1.5 2022.5.31/1.2 2022.6.1/1 2022.6.13/1 2022.7.5/2 2022.7.6/1 2023.5.8/2'
 stock_code = 'hkHSTECH'
 stock_name = '恒生科技指数'
 support_line = {'支撑位': None, '压力位': None}
 _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2022.6.22/1 2022.7.5/2 2022.10.10/2'
 stock_code = 'sh000993'
 stock_name = '全指信息'
 support_line = {'支撑位': 4600, '压力位1': 6300, '压力位2': 7500}
