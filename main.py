@@ -342,14 +342,14 @@ buy_date_str = '2022.5.9/0.25 2022.5.19/0.5 2022.5.23/1.5 2022.5.24/1 2022.9.20/
 stock_code = 'sh000300'
 stock_name = '沪深300'
 support_line = {'支撑位': 3500, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 buy_date_str = '2022.1.19/2.5 2022.4.28/0.5 2022.5.22/0.5 2022.5.24/2 2022.8.2/1 2022.8.18/1 2022.8.24/1 2022.8.31/1'
 stock_code = 'sh000905'
 stock_name = '中证500'
 support_line = {'支撑位': 4800, '压力位': 8100}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 buy_date_str = '2023.8.17/1 2024.1.18/1'
@@ -363,21 +363,21 @@ buy_date_str = '2022.4.28/0.5 2022.5.10/0.5 2022.5.17/0.5 2022.5.19/0.5 2022.7.1
 stock_code = 'sh000922'
 stock_name = '中证红利'
 support_line = {'支撑位': 4750, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 buy_date_str = '2023.3.31/2 2023.4.3/2 2023.8.30/2 2023.12.12/2 2024.1.10/2'
 stock_code = 'sz399006'
 stock_name = '创业板指'
 support_line = {'支撑位': 1680, '压力位': 2570}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 buy_date_str = '2022.4.28/0.5 2022.5.6/0.5 2022.5.10/0.5 2022.5.12/0.5 2022.6.13/1 2022.7.5/1 2022.10.21/2 2023.8.21/2 2023.11.29/2'
 stock_code = 'hkHSI'
 stock_name = '恒生指数'
 support_line = {'支撑位1': 18800, '压力位1': 22400, '压力位2': 25500, '压力位3': 33000}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 
@@ -423,7 +423,7 @@ buy_date_str = '2024.2.5/2'
 stock_code = 'sh000990'
 stock_name = '全指消费'
 support_line = {'支撑位': 11700, '压力位': 17700}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399967'
@@ -436,14 +436,14 @@ buy_date_str = '2022.1.10/1.25 2022.1.12/1.25 2022.1.19/1.25 2022.2.9/1.25 2022.
 stock_code = 'hkHSTECH'
 stock_name = '恒生科技指数'
 support_line = {'支撑位': None, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 buy_date_str = '2022.6.22/1 2022.7.5/2 2022.10.10/2'
 stock_code = 'sh000993'
 stock_name = '全指信息'
 support_line = {'支撑位': 4600, '压力位1': 6300, '压力位2': 7500}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 stock_code = 'sz399971'
