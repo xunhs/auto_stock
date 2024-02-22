@@ -53,13 +53,15 @@ def get_stock_line(title_str, data_df, support_line, buy_date_str=None):
     buy_price = 0.0
     vol_sum = 0.0
     if buy_date_str!=None:
-
         for _str in buy_date_str.split(' '):
             date_str, vol = _str.split('/')
             year,month,day = [int(i) for i in date_str.split('.')]
             vol = float(vol)
-            price = data_df.loc[data_df['date'] == datetime.date(year,month,day), 'close'].tolist()[0]
-            print(price)
+            try:
+                price = data_df.loc[data_df['date'] == datetime.date(year,month,day), 'close'].tolist()[0]
+            except Exception as ex:
+                print(日期价格查询有误, buy_date_str)
+                pass
             buy_price += price * vol
             vol_sum += vol
         support_line['buy_price'] = buy_price / vol_sum 
