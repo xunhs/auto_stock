@@ -409,17 +409,18 @@ index_html_str = '\n'.join([index_html_str, item_html_str])
 # _, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
 # index_html_str = '\n'.join([index_html_str, item_html_str])
 
-
+buy_date_str = '2022.1.24/1.25 2022.6.10/1.2 2022.7.12/2 2022.9.23/2 2023.8.22/2'
 stock_code = 'sh000991'
 stock_name = '全指医药'
 support_line = {'支撑位1': 9700, '支撑位2': 11055, '压力位1': 12300, '压力位2': 13500, '压力位3': 17300}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
+buy_date_str = '2022.1.19/1.25 2022.4.8/1.5 2023.5.10/1 2023.6.7/1 2023.6.12/1 2023.6.26/1 2023.7.20/1 2023.8.7/2'
 stock_code = 'sz399989'
 stock_name = '中证医疗'
 support_line = {'支撑位1': 7900, '支撑位2': 10200, '压力位': None}
-_, _, item_html_str = worker(stock_code, stock_name, support_line, tag=1)
+_, _, item_html_str = worker(stock_code, stock_name, support_line, buy_date_str=buy_date_str, tag=1)
 index_html_str = '\n'.join([index_html_str, item_html_str])
 
 buy_date_str = '2024.2.5/2'
