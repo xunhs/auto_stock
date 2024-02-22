@@ -87,7 +87,8 @@ def get_stock_line(title_str, data_df, support_line, buy_date_str=None):
         dis_per = (now-min_support_line)/now * 100
     if vol_sum != 0.0:
         subtitle_str = '目前点位{}，所处百分位{}%，距离支撑位{}%，购买份额{}，购买均价{}'.format(now, round(now_per, 2), round(dis_per,2), vol_sum, buy_price)
-    subtitle_str = '目前点位{}，所处百分位{}%，距离支撑位{}%'.format(now, round(now_per, 2), round(dis_per,2))
+    else:
+        subtitle_str = '目前点位{}，所处百分位{}%，距离支撑位{}%'.format(now, round(now_per, 2), round(dis_per,2))
     
     
     line.set_global_opts(
