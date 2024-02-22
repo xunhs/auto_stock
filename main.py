@@ -60,7 +60,7 @@ def get_stock_line(title_str, data_df, support_line, buy_date_str=None):
             try:
                 price = data_df.loc[data_df['date'] == datetime.date(year,month,day), 'close'].tolist()[0]
             except Exception as ex:
-                print(日期价格查询有误, buy_date_str)
+                print('日期价格查询有误', buy_date_str)
                 pass
             buy_price += price * vol
             vol_sum += vol
