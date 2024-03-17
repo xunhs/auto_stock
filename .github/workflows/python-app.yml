@@ -5,7 +5,7 @@ name: Auto Stock Python Action
 
 on:
   schedule:
-    - cron: "30 6 * * 0"
+    - cron: "30 6 * * 1-5"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
